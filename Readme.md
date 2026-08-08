@@ -196,7 +196,7 @@ Once the development server starts, open the local address provided by the serve
 The final playable build is available in the `dist` folder:
 
 ```text
-dist/Star-Catcher-AppLovin-Single-HTML.html
+dist/Star-Catcher-AppLovin.html
 ```
 
 This is the standalone **single-file HTML build** prepared for playable distribution.
