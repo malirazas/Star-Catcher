@@ -316,7 +316,7 @@ Then run the development command defined in `package.json`.
 The final standalone build is located at:
 
 ```text
-dist/Star-Catcher-AppLovin-Single-HTML.html
+dist/Star-Catcher-AppLovin.html
 ```
 
 The standalone HTML file contains the embedded game assets and does not require the source project or `node_modules` to run.
