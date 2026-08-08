@@ -1,59 +1,41 @@
 # ⭐ Star Catcher
 
-Star Catcher is a small 2D arcade game built with Phaser 3.90.
+Star Catcher is a lightweight 2D arcade game built with **Phaser 3.90**.
 
-The idea is simple: control a spaceship, catch the falling stars, and try to get the highest score possible before all six lives are lost.
+The goal is simple: control a spaceship, catch falling stars, avoid incoming asteroids, and achieve the highest score possible before losing all of your lives.
 
-I kept the game intentionally lightweight and focused on a clean gameplay loop rather than adding unnecessary features. The project was also built with responsive screens and mobile controls in mind, so the game can be played on both desktop and mobile devices.
+The game was designed with a simple and responsive gameplay loop so it can be played comfortably on both desktop and mobile devices. The project also focuses on keeping the final playable lightweight and suitable for HTML5 playable ad requirements.
 
 ---
 
 ## 🎮 Game Overview
 
-In Star Catcher, the player controls a spaceship positioned near the bottom of the screen.
+In Star Catcher, the player controls a spaceship near the bottom of the screen.
 
-Stars continuously fall from the top of the screen. The goal is to move the spaceship underneath them and catch as many as possible.
+Stars continuously fall from the top of the screen. The player needs to move the spaceship underneath the stars and catch them to increase the score.
 
-Every successfully caught star gives:
-
-**+10 points**
-
-Missing a star costs one life.
+At the same time, **asteroids** fall from above as obstacles. Colliding with an asteroid costs one life, so the player needs to balance catching stars with avoiding obstacles.
 
 The player starts with:
 
-**❤️ 6 Lives**
+**❤️ 5 Lives**
 
-Once all lives are lost, the game ends and the final score is displayed.
-
----
-
-## 🕹️ How to Play
-
-### Desktop
-
-Use the keyboard arrow keys:
-
-- `←` Move left
-- `→` Move right
-
-Move the spaceship underneath the falling stars to catch them.
-
-### Mobile
-
-The game supports touch interaction.
-
-On a touch device, drag the spaceship horizontally across the screen to move it.
-
-This was added so the game does not depend on keyboard controls when played on a phone or tablet.
+The game ends when all five lives are lost.
 
 ---
 
 ## 🎯 Objective
 
-The objective is to catch as many falling stars as possible and achieve the highest score before losing all six lives.
+The main objective is to:
 
-Each star caught:
+- Catch as many stars as possible.
+- Avoid falling asteroids.
+- Keep your lives for as long as possible.
+- Achieve the highest possible score.
+
+### ⭐ Catching a Star
+
+Every successfully caught star gives:
 
 ```text
-+10 Score
++10 Points
