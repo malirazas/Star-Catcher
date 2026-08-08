@@ -150,7 +150,7 @@ class MenuScene extends Phaser.Scene {
         this.controls = this.add.text(
             0,
             0,
-            "← →  Move Player\n\n⭐  Catch Stars\n\n❤️  You have 6 Lives",
+            "← →  Move Player\n\n⭐  Catch Stars\n\n❤️  You have 5 Lives",
             {
                 align: "center",
                 fontSize: this.getFontSize(19, 16),

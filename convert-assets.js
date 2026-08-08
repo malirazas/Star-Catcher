@@ -7,13 +7,15 @@ function toBase64(filePath) {
 
 const player = toBase64("./assets/player.png");
 const star = toBase64("./assets/star.png");
+const obstacle = toBase64("./assets/obstacle.png");
 
 const output = `
 // Auto-generated Base64 assets
 
 const GAME_ASSETS = {
     player: "${player}",
-    star: "${star}"
+    star: "${star}",
+    obstacle: "${obstacle}"
 };
 `;
 

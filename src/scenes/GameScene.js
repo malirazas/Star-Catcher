@@ -11,6 +11,8 @@ class GameScene extends Phaser.Scene {
     this.load.image("player", GAME_ASSETS.player);
 
     this.load.image("star", GAME_ASSETS.star);
+
+    this.load.image("obstacle", GAME_ASSETS.obstacle);
   }
 
   // =========================================
@@ -31,6 +33,7 @@ class GameScene extends Phaser.Scene {
     this.createPlayer();
     this.setupControls();
     this.createStars();
+    this.createObstacles();
     this.createScore();
     this.createHearts();
 
@@ -75,16 +78,13 @@ class GameScene extends Phaser.Scene {
 
   setupGameVariables() {
     this.score = 0;
-    this.lives = 6;
-
-    this.hearts = [];
-
+    this.lives = 5;
     this.playerSpeed = 600;
-
     // Game constants
-    this.maxLives = 6;
-    this.playerSize = 140;
+    this.maxLives = 5;
+    this.playerSize = 120;
     this.starSize = 40;
+    this.obstacleSize = 50;
     this.playerBottomMargin = 80;
   }
 
@@ -149,35 +149,48 @@ class GameScene extends Phaser.Scene {
 
   createScore() {
     this.scoreText = this.add.text(20, 20, "Score : 0", {
-      fontSize: "28px",
+      fontSize: "20px",
       color: "#ffffff",
       fontStyle: "bold",
     });
 
     this.scoreText.setDepth(10);
   }
+  createObstacles() {
+    this.obstacles = this.physics.add.group();
 
+    this.obstacleTimer = this.time.addEvent({
+      delay: this.difficulty.spawnRate * 3.8,
+      callback: this.spawnObstacle,
+      callbackScope: this,
+      loop: true,
+    });
+
+    this.physics.add.overlap(
+      this.player,
+      this.obstacles,
+      this.hitObstacle,
+      null,
+      this,
+    );
+  }
   // =========================================
   // HEARTS
   // =========================================
 
   createHearts() {
-    const heartSpacing = 38;
-    const rightMargin = 45;
+    this.livesText = this.add.text(
+      this.gameWidth - 25,
+      20,
+      "❤️ " + this.lives,
+      {
+        fontSize: "22px",
+        color: "#ffffff",
+        fontStyle: "bold",
+      },
+    );
 
-    const totalHeartWidth = heartSpacing * (this.maxLives - 1);
-
-    const startX = this.gameWidth - totalHeartWidth - rightMargin;
-
-    for (let i = 0; i < this.maxLives; i++) {
-      const heart = this.add.text(startX + i * heartSpacing, 20, "❤️", {
-        fontSize: "28px",
-      });
-
-      heart.setDepth(10);
-
-      this.hearts.push(heart);
-    }
+    this.livesText.setOrigin(1, 0).setDepth(10);
   }
 
   // =========================================
@@ -191,7 +204,13 @@ class GameScene extends Phaser.Scene {
 
     this.updateStars(delta);
   }
+  // =========================================
+  // UPDATE LIVES
+  // =========================================
 
+  updateLives() {
+    this.livesText.setText("❤️ " + this.lives);
+  }
   // =========================================
   // PLAYER MOVEMENT
   // =========================================
@@ -210,14 +229,27 @@ class GameScene extends Phaser.Scene {
       this.player.body.setVelocityX(this.playerSpeed);
     }
   }
+  // =========================================
+  // END GAME
+  // =========================================
+
+  endGame() {
+    this.saveHighScore();
+
+    this.scene.start("GameOverScene", {
+      score: this.score,
+      difficulty: this.difficulty.name,
+    });
+  }
 
   // =========================================
-  // STAR MOVEMENT
+  // STAR + OBSTACLE MOVEMENT
   // =========================================
 
   updateStars(delta) {
     const seconds = delta / 1000;
 
+    // Stars
     this.stars.getChildren().forEach((star) => {
       if (!star.active) {
         return;
@@ -231,6 +263,19 @@ class GameScene extends Phaser.Scene {
         this.handleMissedStar();
       }
     });
+
+    // Obstacles
+    this.obstacles.getChildren().forEach((obstacle) => {
+      if (!obstacle.active) {
+        return;
+      }
+
+      obstacle.y += this.difficulty.starSpeed * seconds;
+
+      if (obstacle.y > this.gameHeight + 80) {
+        obstacle.destroy();
+      }
+    });
   }
 
   // =========================================
@@ -240,16 +285,10 @@ class GameScene extends Phaser.Scene {
   handleMissedStar() {
     this.lives--;
 
-    const heartIndex = this.lives;
-
-    if (heartIndex >= 0) {
-      this.hearts[heartIndex].setText("🤍");
-    }
+    this.updateLives();
 
     if (this.lives <= 0) {
-      this.scene.start("GameOverScene", {
-        score: this.score,
-      });
+      this.endGame();
     }
   }
 
@@ -259,8 +298,24 @@ class GameScene extends Phaser.Scene {
 
   spawnStar() {
     const margin = 30;
+    const minDistance = 120;
 
-    const x = Phaser.Math.Between(margin, this.gameWidth - margin);
+    let x;
+    let attempts = 0;
+
+    do {
+      x = Phaser.Math.Between(margin, this.gameWidth - margin);
+
+      attempts++;
+    } while (
+      attempts < 20 &&
+      this.obstacles
+        .getChildren()
+        .some(
+          (obstacle) =>
+            obstacle.active && Math.abs(obstacle.x - x) < minDistance,
+        )
+    );
 
     const star = this.physics.add.sprite(x, -30, "star");
 
@@ -270,7 +325,36 @@ class GameScene extends Phaser.Scene {
 
     this.stars.add(star);
   }
+  // =========================================
+  // SPAWN OBSTACLE
+  // =========================================
 
+  spawnObstacle() {
+    const margin = 30;
+    const minDistance = 120;
+
+    let x;
+    let attempts = 0;
+
+    do {
+      x = Phaser.Math.Between(margin, this.gameWidth - margin);
+
+      attempts++;
+    } while (
+      attempts < 20 &&
+      this.stars
+        .getChildren()
+        .some((star) => star.active && Math.abs(star.x - x) < minDistance)
+    );
+
+    const obstacle = this.physics.add.sprite(x, -30, "obstacle");
+
+    obstacle.setDisplaySize(this.obstacleSize, this.obstacleSize);
+
+    obstacle.setDepth(1);
+
+    this.obstacles.add(obstacle);
+  }
   // =========================================
   // CATCH STAR
   // =========================================
@@ -290,7 +374,34 @@ class GameScene extends Phaser.Scene {
     this.animateCaughtStar(star);
     this.updateScore();
   }
+  // =========================================
+  // OBSTACLE COLLISION
+  // =========================================
 
+  hitObstacle(player, obstacle) {
+    if (!obstacle.active) {
+      return;
+    }
+
+    obstacle.destroy();
+
+    this.lives--;
+
+    this.updateLives();
+
+    // Small hit feedback
+    this.tweens.add({
+      targets: this.player,
+      alpha: 0.3,
+      duration: 100,
+      yoyo: true,
+      repeat: 2,
+    });
+
+    if (this.lives <= 0) {
+      this.endGame();
+    }
+  }
   // =========================================
   // SCORE POPUP
   // =========================================
@@ -352,6 +463,8 @@ class GameScene extends Phaser.Scene {
     this.score += 10;
 
     this.scoreText.setText("Score : " + this.score);
+
+    this.saveHighScore();
 
     this.tweens.add({
       targets: this.scoreText,
@@ -423,5 +536,24 @@ class GameScene extends Phaser.Scene {
     this.gameHeight = gameSize.height;
 
     this.keepPlayerInsideScreen();
+  }
+
+  // =========================================
+  // HIGH SCORE
+  // =========================================
+
+  getHighScore() {
+    const key = "starCatcherHighScore_" + this.difficulty.name;
+
+    return Number(localStorage.getItem(key)) || 0;
+  }
+  saveHighScore() {
+    const key = "starCatcherHighScore_" + this.difficulty.name;
+
+    const highScore = this.getHighScore();
+
+    if (this.score > highScore) {
+      localStorage.setItem(key, this.score);
+    }
   }
 }
