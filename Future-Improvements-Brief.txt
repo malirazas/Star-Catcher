@@ -1,0 +1,38 @@
+FUTURE IMPROVEMENTS & POSSIBLE FEATURES
+Star Catcher — Phaser 3 Technical Assessment
+================================================
+
+GAMEPLAY
+--------
+- Power-ups (magnet, shield, slow-motion)
+- Combo/multiplier system for consecutive catches
+- Difficulty curve tuned from real playtesting data rather than fixed values
+
+POLISH
+------
+- Particle effects on catch/hit instead of simple text feedback
+- Sound effects and background music with a mute toggle
+- Screen shake and improved hit feedback
+
+TECHNICAL
+---------
+- Object pooling for falling items to reduce garbage collection overhead
+- Config-driven difficulty settings instead of hardcoded values
+- Unit tests for scoring and spawn-rate logic
+
+UI / UX
+-------
+- Pause functionality
+- Settings menu (mute, difficulty selection)
+- End screen showing accuracy and detailed stats, not just score
+
+ACCESSIBILITY
+-------------
+- Colorblind-friendly item design
+- Option to disable screen shake
+
+TOP PRIORITY WITH ADDITIONAL TIME
+----------------------------------
+1. Object pooling — best performance improvement
+2. Sound effects — best feel improvement for the effort
+3. Combo system — best gameplay depth improvement for the effort
