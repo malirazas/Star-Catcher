@@ -12,21 +12,26 @@ The project was designed around a simple gameplay loop with responsive controls 
 
 The player starts each game with **5 lives**.
 
-Stars continuously fall from the top of the screen. Catching a star awards **10 points**. Missing a star costs one life, and colliding with a falling asteroid also costs one life.
+Stars continuously fall from the top of the screen. Catching a star awards **10 points**. Missing a star does not cost a life. Falling asteroids are the main hazard, and colliding with an asteroid costs one life.
 
-The game ends when all five lives are lost, after which the final score is shown on the Game Over screen.
+The game ends when all five lives are lost through asteroid collisions, after which the final score is shown on the Game Over screen.
 
 ### Scoring and Lives
 
 | Action | Result |
 |---|---:|
 | Catch a star | **+10 points** |
-| Miss a star | **-1 life** |
 | Hit an asteroid | **-1 life** |
 
 Stars and obstacles are spawned with spacing considerations so that obstacles do not unfairly overlap with collectible stars.
 
 ---
+
+## 🎯 Objective
+
+The objective is to catch as many falling stars as possible, avoid asteroids, and achieve the highest score while keeping all five lives for as long as possible.
+
+Missing a star does not reduce the player's lives. Only an asteroid collision removes a life.
 
 ## 🕹️ Controls
 
@@ -125,7 +130,7 @@ Star-Catcher/
 │   └── ...
 │
 └── dist/
-    └── Star-Catcher-AppLovin-Single-HTML.html
+    └── Star Catcher AppLovin.html
 ```
 
 ---
@@ -196,7 +201,7 @@ Once the development server starts, open the local address provided by the serve
 The final playable build is available in the `dist` folder:
 
 ```text
-dist/Star-Catcher-AppLovin.html
+dist/Star Catcher AppLovin.html
 ```
 
 This is the standalone **single-file HTML build** prepared for playable distribution.
@@ -281,7 +286,7 @@ The game has been tested across desktop and mobile screen sizes.
 The following areas were checked:
 
 - Star collection and scoring
-- Missed-star life reduction
+- Missed-star behavior without life reduction
 - Asteroid collision and life reduction
 - Game Over state
 - Play Again functionality
@@ -316,7 +321,7 @@ Then run the development command defined in `package.json`.
 The final standalone build is located at:
 
 ```text
-dist/Star-Catcher-AppLovin.html
+dist/Star Catcher AppLovin.html
 ```
 
 The standalone HTML file contains the embedded game assets and does not require the source project or `node_modules` to run.
@@ -327,4 +332,4 @@ The standalone HTML file contains the embedded game assets and does not require 
 
 Star Catcher was built with a focus on a clean and lightweight arcade experience.
 
-The final version combines falling stars, asteroid obstacles, five lives, difficulty levels, per-difficulty high scores, desktop keyboard controls, mobile touch controls, responsive scaling, embedded assets, and a standalone single-file HTML build.
+The final version combines falling stars, asteroid obstacles, five lives, difficulty levels, per-difficulty high scores, desktop keyboard controls, mobile touch controls, responsive scaling, embedded assets, and a standalone single-file HTML build. Missing stars do not reduce lives; lives are lost only when the player collides with an asteroid.
